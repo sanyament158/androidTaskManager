@@ -7,12 +7,116 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.LoginActivity">
 
-    <LinearLayout
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/headerTitle"
+        style="@style/BaseText.headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Вход"
+
+        android:layout_marginVertical="50dp"
+        android:layout_marginHorizontal="80dp"
+        android:paddingVertical="8dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/headerTextView"/>
+        />
+
+    <TextView android:id="@+id/subHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/BaseText.subHeaderTextView"
+
+        android:layout_marginTop="40dp"
+
+        android:text="Введите данные для авторизации"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerTitle" />
+    <LinearLayout
+        android:id="@+id/fields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/fields_group_shape"
+
+        android:layout_marginTop="12dp"
+        android:paddingBottom="50dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subHeader">
+        <TextView android:id="@+id/loginTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Логин:"
+            style="@style/BaseText.headerTextView"
+            android:textAlignment="textStart"
+            android:background="@color/transparent"
+
+            android:paddingStart="100dp"
+            android:layout_marginVertical="5dp"
+
+            />
+        <EditText android:id="@+id/loginField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/BaseText.inputField"
+
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginVertical="5dp"
+            />
+
+
+        <TextView android:id="@+id/passwordTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Пароль:"
+            style="@style/BaseText.headerTextView"
+            android:textAlignment="textStart"
+            android:background="@color/transparent"
+
+            android:paddingStart="100dp"
+            android:layout_marginVertical="5dp"
+            />
+        <EditText android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/BaseText.inputField"
+
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginVertical="5dp"
+            />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_margin="10dp">
+
+        <Button
+            android:id="@+id/buttonSignUp"
+            style="@style/BaseText.BaseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Регистрация"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/signIn"
+            style="@style/BaseText.BaseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Войти"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

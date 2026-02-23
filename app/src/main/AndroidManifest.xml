@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidTaskManager">
         <activity
+            android:name=".ui.activities.admin.MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>

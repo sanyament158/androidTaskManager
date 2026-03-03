@@ -113,7 +113,7 @@
             app:layout_constraintWidth_percent="0.5" />
 
         <Button
-            android:id="@+id/signIn"
+            android:id="@+id/buttonSignIn"
             style="@style/BaseText.BaseButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

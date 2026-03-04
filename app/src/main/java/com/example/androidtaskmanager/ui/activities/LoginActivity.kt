@@ -1,5 +1,6 @@
 package com.example.androidtaskmanager.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityLoginBinding
+import com.example.androidtaskmanager.ui.activities.admin.MainActivity
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
@@ -31,7 +33,10 @@ class LoginActivity : AppCompatActivity() {
 
                 lifecycleScope.launch {
                     val loginedUser = db.login(username, password)
-                    Toast.makeText(this@LoginActivity, "${loginedUser.Username}", Toast.LENGTH_SHORT).show()
+                    if (loginedUser.Role.Id == 1){
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
 
             }

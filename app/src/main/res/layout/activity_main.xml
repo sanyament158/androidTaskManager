@@ -6,5 +6,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activities.admin.MainActivity">
-    
+
+    <LinearLayout
+        android:id="@+id/headerTitle"
+        android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+        android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="Заголовок"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:gravity="center"/>
+
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_dynamic_neutral_variant90"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerTitle">
+
+        <Button
+            android:id="@+id/buttonTasks"
+            style="@style/BaseText.BaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="7dp"
+            android:text="Все задачи"
+            />
+        <Button
+            android:id="@+id/buttonScopes"
+            style="@style/BaseText.BaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="7dp"
+            android:text="Зоны ответственности"
+            />
+        <Button
+            android:id="@+id/buttonEmployees"
+            style="@style/BaseText.BaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="7dp"
+            android:text="Сотрудники"
+            />
+        <Button
+            android:id="@+id/buttonAddTask"
+            style="@style/BaseText.BaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="7dp"
+            android:text="Добавить задачу"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        style="@style/BaseText.BaseButton"
+        android:text="Выйти"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

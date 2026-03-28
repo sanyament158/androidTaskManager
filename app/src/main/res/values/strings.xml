@@ -3,4 +3,6 @@
 
     <string name="back">Назад</string>
     <string name="exit">Выход</string>
+    <string name="markAsFinished">Выполнено</string>
+    <string name="takeTask">Взять в работу</string>
 </resources>

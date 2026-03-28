@@ -6,13 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.androidtaskmanager.R
+import com.example.androidtaskmanager.databinding.ActivityTaskDetailsBinding
 
 class TaskDetailsActivity : AppCompatActivity() {
-    
+    private lateinit var binding: ActivityTaskDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_task_details)
-
+        binding = ActivityTaskDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }

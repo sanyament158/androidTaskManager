@@ -15,11 +15,14 @@
     <style name="BaseText.subHeaderTextView">
         <item name="android:textSize">24dp</item>
         <item name="android:textColor">@color/black</item>
-
     </style>
     <style name="BaseText.fieldTitle">
         <item name="android:textColor">@color/black</item>
         <item name="android:textAlignment">textStart</item>
+    </style>
+    <style name="BaseText.fieldTitle.fieldValue">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BaseText.inputField">

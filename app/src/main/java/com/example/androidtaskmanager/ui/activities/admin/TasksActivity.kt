@@ -13,6 +13,7 @@ import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityTasksBinding
 import com.example.androidtaskmanager.fragments.HeaderFragment
+import com.example.androidtaskmanager.models.Task
 import com.example.androidtaskmanager.ui.adapters.TaskAdapter
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,8 @@ class TasksActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        Log.e("f", "$statusSwitcher")
+
         binding = ActivityTasksBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val headerTitle = HeaderFragment.newInstance("Все задачи")
@@ -43,20 +46,22 @@ class TasksActivity : AppCompatActivity() {
             buttonStatusSwitcher.setOnClickListener {
                 _statusSwitcher++
                 buttonStatusSwitcher.text = updateStatusSwitcherText()
+                lifecycleScope.launch { binding.rvTasks.adapter = TaskAdapter(updateTasks(),
+                    {task -> Log.i("RV_TASKS", "task title - ${task.Title}")}
+                ) }
             }
         }
-
     }
 
     override fun onStart() {
         super.onStart()
         lifecycleScope.launch {
-            val tasks = db.getTasks()
+            val tasks = updateTasks()
+            Log.i("TASKS LENGTH == ", tasks.count().toString())
             binding.rvTasks.layoutManager = LinearLayoutManager(this@TasksActivity)
             binding.rvTasks.adapter = TaskAdapter(tasks,
                 {task -> Log.i("RV_TASKS", "task title - ${task.Title}")}
             )
-
         }
     }
     private fun updateStatusSwitcherText(): String =
@@ -66,5 +71,8 @@ class TasksActivity : AppCompatActivity() {
             3 -> "На проверке"
             else -> "unknown"
         }
-
+    private suspend fun updateTasks(): MutableList<Task> {
+        val r = db.getTasks().filter { it.Status.Id == statusSwitcher }
+        return r.toMutableList()
+    }
 }

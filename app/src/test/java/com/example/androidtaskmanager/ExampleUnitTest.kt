@@ -3,15 +3,37 @@ package com.example.androidtaskmanager
 import org.junit.Test
 
 import org.junit.Assert.*
+import com.example.androidtaskmanager.data.DatabaseService
+import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.test.runTest
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class ExampleUnitTest {
+    val db = DatabaseService()
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun getTasksTest() = runTest {
+        val tasks = db.getTasks()
+        if (tasks.count() > 0){
+            for (t in tasks){
+                println("${t.Id} --- ${t.Owner.Username} --- ${t.Scope.Name} --- ${t.Title}")
+            }
+            assertTrue(true)
+        }
+    }
+
+    @Test
+    fun getUsersTest() = runTest{
+        val users = db.getUsers()
+        println(users.count())
+        for (u in users){
+            println("${u.Id}, ${u.Username}, ${u.Role.Name}, ${u.Scopes.count()}")
+        }
+        assertTrue(users.count() > 0)
+    }
+
+    @Test
+    fun getScopeTest() = runTest {
+        val scope = db.getScope(35)
+        println("${scope.Id}, ${scope.Name}")
+        assertTrue(scope.Id != 0)
     }
 }

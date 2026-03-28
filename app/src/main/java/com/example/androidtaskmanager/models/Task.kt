@@ -13,10 +13,10 @@ class Task(
 )
 
 class Scope(
-    Id: Int = 0,
-    Name: String = "default"
+    val Id: Int = 0,
+    val Name: String = "default"
 )
 class Status(
-    Id: Int = 0,
-    Name: String = "default"
+    val Id: Int = 0,
+    val Name: String = "default"
 )

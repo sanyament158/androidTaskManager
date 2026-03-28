@@ -5,6 +5,8 @@ import com.google.gson.JsonObject
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -17,6 +19,7 @@ interface ApiService {
     @GET("getTable/getUsers.php")
     suspend fun getUsers(): JsonObject
 
-
+    @POST("scope/getScopeById.php")
+    suspend fun getScope(@Body data: JsonObject): JsonObject
 
 }

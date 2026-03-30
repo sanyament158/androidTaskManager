@@ -1,5 +1,6 @@
 package com.example.androidtaskmanager.ui.activities.admin
 
+import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
@@ -47,7 +48,11 @@ class TasksActivity : AppCompatActivity() {
                 _statusSwitcher++
                 buttonStatusSwitcher.text = updateStatusSwitcherText()
                 lifecycleScope.launch { binding.rvTasks.adapter = TaskAdapter(updateTasks(),
-                    {task -> Log.i("RV_TASKS", "task title - ${task.Title}")}
+                    {task ->
+                        TaskDetailsActivity.task = task
+                        startActivity(Intent(this@TasksActivity,
+                            TaskDetailsActivity::class.java))
+                    }
                 ) }
             }
         }
@@ -57,10 +62,12 @@ class TasksActivity : AppCompatActivity() {
         super.onStart()
         lifecycleScope.launch {
             val tasks = updateTasks()
-            Log.i("TASKS LENGTH == ", tasks.count().toString())
             binding.rvTasks.layoutManager = LinearLayoutManager(this@TasksActivity)
             binding.rvTasks.adapter = TaskAdapter(tasks,
-                {task -> Log.i("RV_TASKS", "task title - ${task.Title}")}
+                {task ->
+                    TaskDetailsActivity.task = task
+                    startActivity(Intent(this@TasksActivity,
+                    TaskDetailsActivity::class.java))}
             )
         }
     }

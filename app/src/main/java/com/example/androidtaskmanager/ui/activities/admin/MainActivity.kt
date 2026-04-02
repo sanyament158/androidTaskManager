@@ -10,8 +10,12 @@ import androidx.fragment.app.commit
 import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.databinding.ActivityMainBinding
 import com.example.androidtaskmanager.fragments.HeaderFragment
+import com.example.androidtaskmanager.models.User
 
 class MainActivity : AppCompatActivity() {
+    companion object{
+        lateinit var enteredUser: User
+    }
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         with (binding){
             buttonTasks.setOnClickListener {
                 val intent = Intent(this@MainActivity, TasksActivity::class.java)
+                TasksActivity.enteredUser = enteredUser
                 startActivity(intent)
             }
         }

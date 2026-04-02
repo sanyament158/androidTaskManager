@@ -1,5 +1,6 @@
 package com.example.androidtaskmanager.data
 
+import android.util.Log
 import com.example.androidtaskmanager.models.Role
 import com.example.androidtaskmanager.models.Scope
 import com.example.androidtaskmanager.models.Status
@@ -173,6 +174,67 @@ class DatabaseService {
             }
         } catch (e: Exception){
             throw Exception(e.message)
+        }
+    }
+    suspend fun sendTaskForVerify(task: Task): Boolean{
+        val data = JsonObject()
+        data.addProperty("table_name", "task")
+        data.addProperty("field_name", "idStatus")
+        data.addProperty("field_new_value", "3")
+        data.addProperty("id", task.Id)
+
+        val rootResponseJson = api.sendTaskForVerify(data)
+        return try{
+            val r = rootResponseJson.get("success").asBoolean
+            if (r){
+                r
+            }
+            else {
+                throw Exception("DatabaseService.sendTaskForVerify() error. r == false")
+            }
+        } catch (e: Exception){
+            Log.e("DatabaseService.sendTaskForVerify()", e.message.toString())
+            throw e
+        }
+    }
+    suspend fun verifyTask(task: Task, userId: Int): Boolean{
+        val data = JsonObject()
+        data.addProperty("table_name", "task")
+        data.addProperty("field_name", "idStatus")
+        data.addProperty("field_new_value", "2")
+        data.addProperty("id", task.Id)
+
+        val rootResponseJson = api.sendTaskForVerify(data)
+        return try{
+            val r = rootResponseJson.get("success").asBoolean
+            if (r){
+                return putFinishedTask(task, userId)
+            }
+            else {
+                throw Exception("DatabaseService.verifyTask() error. r == false")
+            }
+        } catch (e: Exception){
+            Log.e("DatabaseService.verifyTask()", e.message.toString())
+            throw e
+        }
+    }
+    private suspend fun putFinishedTask(task: Task, userId: Int): Boolean{
+        val data = JsonObject()
+        data.addProperty("idTask", task.Id)
+        data.addProperty("idFinishedUser", userId)
+
+        val rootResponseJson = api.putFinishedTask(data)
+        return try{
+            val r = rootResponseJson.get("success").asBoolean
+            if (r){
+                r
+            }
+            else {
+                throw Exception("DatabaseService.putFinishedTask() error. r == false")
+            }
+        } catch (e: Exception){
+            Log.e("DatabaseService.putFinishedTask()", e.message.toString())
+            throw e
         }
     }
 }

@@ -3,13 +3,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidtaskmanager.R
-import com.example.androidtaskmanager.databinding.ItemTaskBinding
 import com.example.androidtaskmanager.models.Task
-import kotlinx.datetime.LocalDate
 
 class TaskAdapter(
     private val tasks: MutableList<Task>,
@@ -41,7 +37,7 @@ class TaskAdapter(
 
         fun bind(task: Task, onItemClick: (Task) -> Unit) {
             tvTitle.text = task.Title
-            tvDeadline.text = "Срок: ${task.deadline}"
+            tvDeadline.text = "Срок: ${task.Deadline}"
             tvStatus.text = task.Status.Name
 
             itemView.setOnClickListener {

@@ -22,4 +22,13 @@ interface ApiService {
     @POST("scope/getScopeById.php")
     suspend fun getScope(@Body data: JsonObject): JsonObject
 
+    @POST("generics/updateFieldFromTableById.php")
+    suspend fun sendTaskForVerify(@Body data: JsonObject): JsonObject
+
+    @POST("generics/updateFieldFromTableById.php")
+    suspend fun verifyTask(@Body data: JsonObject): JsonObject
+
+    @POST("task/putFinishedTask.php")
+    suspend fun putFinishedTask(@Body data: JsonObject): JsonObject
+
 }

@@ -12,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityLoginBinding
+import com.example.androidtaskmanager.models.User
 import com.example.androidtaskmanager.ui.activities.admin.MainActivity
+import com.example.androidtaskmanager.ui.activities.admin.TaskDetailsActivity
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
@@ -34,9 +36,13 @@ class LoginActivity : AppCompatActivity() {
 
                 lifecycleScope.launch {
                     val loginedUser = db.login(username, password)
-                    if (loginedUser.Role.Id == 1){
+                    if (loginedUser.Role.Id == 2){
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        MainActivity.enteredUser = loginedUser
                         startActivity(intent)
+                    }
+                    else {
+                        Toast.makeText(this@LoginActivity, "Вход только для сотрудников", Toast.LENGTH_SHORT).show()
                     }
                 }
 

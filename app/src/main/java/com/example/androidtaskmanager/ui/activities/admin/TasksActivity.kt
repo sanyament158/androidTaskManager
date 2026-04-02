@@ -15,10 +15,14 @@ import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityTasksBinding
 import com.example.androidtaskmanager.fragments.HeaderFragment
 import com.example.androidtaskmanager.models.Task
+import com.example.androidtaskmanager.models.User
 import com.example.androidtaskmanager.ui.adapters.TaskAdapter
 import kotlinx.coroutines.launch
 
 class TasksActivity : AppCompatActivity() {
+    companion object{
+        lateinit var enteredUser: User
+    }
     private lateinit var binding: ActivityTasksBinding
     private val db = DatabaseService()
     private var _statusSwitcher = 0
@@ -50,6 +54,7 @@ class TasksActivity : AppCompatActivity() {
                 lifecycleScope.launch { binding.rvTasks.adapter = TaskAdapter(updateTasks(),
                     {task ->
                         TaskDetailsActivity.task = task
+                        TaskDetailsActivity.enteredUser = enteredUser
                         startActivity(Intent(this@TasksActivity,
                             TaskDetailsActivity::class.java))
                     }
@@ -66,6 +71,7 @@ class TasksActivity : AppCompatActivity() {
             binding.rvTasks.adapter = TaskAdapter(tasks,
                 {task ->
                     TaskDetailsActivity.task = task
+                    TaskDetailsActivity.enteredUser = enteredUser
                     startActivity(Intent(this@TasksActivity,
                     TaskDetailsActivity::class.java))}
             )

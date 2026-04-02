@@ -24,34 +24,40 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toKotlinLocalDate
 
 class TaskDetailsActivity() : AppCompatActivity() {
-    companion object{
+    companion object {
         lateinit var task: Task
         lateinit var enteredUser: User
     }
+
     private lateinit var binding: ActivityTaskDetailsBinding
     private val db = DatabaseService()
+    private lateinit var tasks: MutableList<Task>
+    private var actualTaskIndex = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityTaskDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (task.Id == 0){
+        // init a tasks list
+        lifecycleScope.launch {
+            tasks = db.getTasks()
+            actualTaskIndex = tasks.indexOf(
+                tasks.find {it.Id == task.Id}
+            )
+        }
+
+        if (task.Id == 0) {
             throw Exception("task == null")
         }
 
         //set task's data
-        with(binding){
-            tvTaskTitle.text = "Задача ${task.Title}"
-            tvOwner.text = task.Owner.Lname
-            tvStatus.text = task.Status.Name
-            tvScope.text = task.Scope.Name
-            tvDeadline.text = java.time.LocalDate.now().toKotlinLocalDate().daysUntil(task.Deadline).toString()
-            if (java.time.LocalDate.now().toKotlinLocalDate().daysUntil(task.Deadline) < 0){
-                tvDeadlineTitle.text = "Дней просрочено"
-            }
-            tvSince.text = "Задача создана ${task.Since}"
-            when (task.Status.Id){
+        with(binding) {
+            setupTaskFields()
+
+            // btAction setting
+            when (task.Status.Id) {
                 // if status == 'В процессе'
                 1 -> {
                     btAction.text = "Готово"
@@ -59,13 +65,13 @@ class TaskDetailsActivity() : AppCompatActivity() {
                         AlertDialog.Builder(this@TaskDetailsActivity)
                             .setTitle("Подтверждение")
                             .setMessage("Задача выполнена вами?")
-                            .setNegativeButton("Нет") {dialog, _ -> dialog.dismiss()}
-                            .setPositiveButton("Да") {_, _ -> sendForVerify()}
+                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                            .setPositiveButton("Да") { _, _ -> sendForVerify() }
                             .show()
                     }
                 }
                 // if status == 'Готово'
-                2 ->{
+                2 -> {
                     btAction.text = "Задача уже выполнена"
                     btAction.isEnabled = false
                     btAction.background = R.color.grey.toDrawable()
@@ -77,22 +83,59 @@ class TaskDetailsActivity() : AppCompatActivity() {
                         AlertDialog.Builder(this@TaskDetailsActivity)
                             .setTitle("Подтверждение")
                             .setMessage("Вы проверили результат?")
-                            .setNegativeButton("Нет") {dialog, _ -> dialog.dismiss()}
-                            .setPositiveButton("Да") {_, _ -> sendForFinished()}
+                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                            .setPositiveButton("Да") { _, _ -> sendForFinished() }
                             .show()
                     }
                 }
             }
+            btNext.setOnClickListener {
+                if (actualTaskIndex == tasks.count() - 1){
+                    actualTaskIndex = 0
+                } else{
+                    actualTaskIndex++
+                }
+
+                task = tasks[actualTaskIndex]
+                setupTaskFields()
+            }
+            btPrevious.setOnClickListener {
+                if (actualTaskIndex == 0){
+                    actualTaskIndex = tasks.count() - 1
+                } else{
+                    actualTaskIndex--
+                }
+
+                task = tasks[actualTaskIndex]
+                setupTaskFields()
+            }
         }
     }
-    private fun sendForVerify(){
+
+    private fun sendForVerify() {
         lifecycleScope.launch {
             db.sendTaskForVerify(task)
         }
     }
-    private fun sendForFinished(){
+
+    private fun sendForFinished() {
         lifecycleScope.launch {
             db.verifyTask(task, enteredUser.Id)
+        }
+    }
+
+    private fun setupTaskFields() {
+        with(binding) {
+            tvTaskTitle.text = "Задача ${task.Title}"
+            tvOwner.text = task.Owner.Lname
+            tvStatus.text = task.Status.Name
+            tvScope.text = task.Scope.Name
+            tvDeadline.text =
+                java.time.LocalDate.now().toKotlinLocalDate().daysUntil(task.Deadline).toString()
+            if (java.time.LocalDate.now().toKotlinLocalDate().daysUntil(task.Deadline) < 0) {
+                tvDeadlineTitle.text = "Дней просрочено"
+            }
+            tvSince.text = "Задача создана ${task.Since}"
         }
     }
 }

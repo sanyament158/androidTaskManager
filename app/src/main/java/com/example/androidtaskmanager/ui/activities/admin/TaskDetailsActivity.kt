@@ -33,6 +33,10 @@ class TaskDetailsActivity() : AppCompatActivity() {
     private val db = DatabaseService()
     private lateinit var tasks: MutableList<Task>
     private var actualTaskIndex = 0
+    private val onSwitchTask: () -> Unit = {
+        setupActionButton()
+        setupTaskFields()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +48,7 @@ class TaskDetailsActivity() : AppCompatActivity() {
         lifecycleScope.launch {
             tasks = db.getTasks()
             actualTaskIndex = tasks.indexOf(
-                tasks.find {it.Id == task.Id}
+                tasks.find { it.Id == task.Id }
             )
         }
 
@@ -53,63 +57,27 @@ class TaskDetailsActivity() : AppCompatActivity() {
         }
 
         with(binding) {
-            setupTaskFields()
+            onSwitchTask()
 
-            // btAction setting
-            when (task.Status.Id) {
-                // if status == 'В процессе'
-                1 -> {
-                    lifecycleScope.launch {
-//                        val scopes =
-                    }
-                    btAction.text = "Готово"
-                    btAction.setOnClickListener {
-                        AlertDialog.Builder(this@TaskDetailsActivity)
-                            .setTitle("Подтверждение")
-                            .setMessage("Задача выполнена вами?")
-                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                            .setPositiveButton("Да") { _, _ -> sendForVerify() }
-                            .show()
-                    }
-                }
-                // if status == 'Готово'
-                2 -> {
-                    btAction.text = "Задача уже выполнена"
-                    btAction.isEnabled = false
-                    btAction.background = R.color.grey.toDrawable()
-                }
-                // if status == 'На проверке'
-                3 -> {
-                    btAction.text = "Проверить"
-                    btAction.setOnClickListener {
-                        AlertDialog.Builder(this@TaskDetailsActivity)
-                            .setTitle("Подтверждение")
-                            .setMessage("Вы проверили результат?")
-                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                            .setPositiveButton("Да") { _, _ -> sendForFinished() }
-                            .show()
-                    }
-                }
-            }
             btNext.setOnClickListener {
-                if (actualTaskIndex == tasks.count() - 1){
+                if (actualTaskIndex == tasks.count() - 1) {
                     actualTaskIndex = 0
-                } else{
+                } else {
                     actualTaskIndex++
                 }
 
                 task = tasks[actualTaskIndex]
-                setupTaskFields()
+                onSwitchTask()
             }
             btPrevious.setOnClickListener {
-                if (actualTaskIndex == 0){
+                if (actualTaskIndex == 0) {
                     actualTaskIndex = tasks.count() - 1
-                } else{
+                } else {
                     actualTaskIndex--
                 }
 
                 task = tasks[actualTaskIndex]
-                setupTaskFields()
+                onSwitchTask()
             }
         }
     }
@@ -138,6 +106,54 @@ class TaskDetailsActivity() : AppCompatActivity() {
                 tvDeadlineTitle.text = "Дней просрочено"
             }
             tvSince.text = "Задача создана ${task.Since}"
+        }
+    }
+    private fun setupActionButton(){
+        with(binding){
+            when (task.Status.Id) {
+                // if status == 'В процессе'
+                1 -> {
+                    btAction.text = "Готово"
+                    var isResponsible = false
+                    for (s in enteredUser.Scopes){
+                        Log.e("VIP", s.Name)
+                    }
+                    for (s in enteredUser.Scopes){
+                        if (s.Id == task.Scope.Id){
+                            isResponsible = true
+                            btAction.setOnClickListener {
+                                AlertDialog.Builder(this@TaskDetailsActivity)
+                                    .setTitle("Подтверждение")
+                                    .setMessage("Задача выполнена вами?")
+                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                    .setPositiveButton("Да") { _, _ -> sendForVerify() }
+                                    .show()
+                            }
+                        }
+                    }
+                    if (!isResponsible){
+                        btAction.background = R.drawable.field_shape.toDrawable()
+                    }
+                }
+                // if status == 'Готово'
+                2 -> {
+                    btAction.text = "Задача уже выполнена"
+                    btAction.isEnabled = false
+                    btAction.background = R.color.grey.toDrawable()
+                }
+                // if status == 'На проверке'
+                3 -> {
+                    btAction.text = "Проверить"
+                    btAction.setOnClickListener {
+                        AlertDialog.Builder(this@TaskDetailsActivity)
+                            .setTitle("Подтверждение")
+                            .setMessage("Вы проверили результат?")
+                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                            .setPositiveButton("Да") { _, _ -> sendForFinished() }
+                            .show()
+                    }
+                }
+            }
         }
     }
 }

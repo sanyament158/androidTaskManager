@@ -26,19 +26,19 @@ class DatabaseService {
         .build()
         .create(ApiService::class.java)
 
-    suspend fun login(username: String, password: String): User{
+    suspend fun login(username: String, password: String): User {
         val data = JsonObject()
         data.addProperty("username", username)
         data.addProperty("password", password)
         val rootResponse = api.login(data)
 
-        return try{
+        return try {
             var loginedUser = User()
             val res = rootResponse.get("success").asBoolean
-            if (res){
+            if (res) {
                 val usersRootResponse = api.getUsers()
                 val usersResponse = usersRootResponse.get("user").asJsonArray
-                for (userElement in usersResponse){
+                for (userElement in usersResponse) {
                     val userObject = userElement.asJsonObject
                     val user = User(
                         userObject.get("Id").asInt,
@@ -48,30 +48,29 @@ class DatabaseService {
                             userObject.get("RoleId").asInt, userObject.get("RoleName").asString
                         )
                     )
-                    if (user.Username == username){
+                    if (user.Username == username) {
                         loginedUser = user
                         break
                     }
                 }
                 loginedUser
-            }
-            else {
+            } else {
                 throw Exception("login incorrect!")
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             throw Exception("error in DatabaseService, loginUser()", e)
         }
 
     }
-    suspend fun getTasks(): MutableList<Task>{
+
+    suspend fun getTasks(): MutableList<Task> {
         val rootResponseJson = api.getTasks()
         val tasks = mutableListOf<Task>()
-        if (rootResponseJson.get("success").asBoolean){
-            if (rootResponseJson.get("count").asInt > 0){
-                return try{
+        if (rootResponseJson.get("success").asBoolean) {
+            if (rootResponseJson.get("count").asInt > 0) {
+                return try {
                     val tasksResponse = rootResponseJson.getAsJsonArray("data")
-                    for (t in tasksResponse){
+                    for (t in tasksResponse) {
                         val taskResponse = t.asJsonObject
                         println(taskResponse.toString())
                         val task = Task(
@@ -90,36 +89,39 @@ class DatabaseService {
                                 taskResponse.get("StatusName").asString
                             ),
                             taskResponse.get("Title").asString,
-                            taskResponse.get("Description")?.takeIf { !it.isJsonNull }?.asString ?: "Без описания",
-                            Scope(taskResponse.get("IdScope").asInt, taskResponse.get("ScopeName").asString),
+                            taskResponse.get("Description")?.takeIf { !it.isJsonNull }?.asString
+                                ?: "Без описания",
+                            Scope(
+                                taskResponse.get("IdScope").asInt,
+                                taskResponse.get("ScopeName").asString
+                            ),
                             LocalDate.parse(taskResponse.get("Since").asString),
                             LocalDate.parse(taskResponse.get("Deadline").asString)
                         )
                         tasks.add(task)
                     }
                     tasks
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     throw Exception(e.message.toString())
                 }
-            }
-            else {
+            } else {
                 return mutableListOf()
             }
-        }
-        else {
+        } else {
             throw Exception("success == false")
         }
     }
-    suspend fun getUsers(): MutableList<User>{ // need add scopes (responsibilities)
+
+    suspend fun getUsers(): MutableList<User> { // need add scopes (responsibilities)
         val rootResponseJson = api.getUsers()
-        if (rootResponseJson.get("success").asBoolean){
-            return try{
+        if (rootResponseJson.get("success").asBoolean) {
+            return try {
                 val users = mutableListOf<User>()
 
                 val responsibilitiesResponse = rootResponseJson.getAsJsonArray("responsibility")
                 val usersResponse = rootResponseJson.getAsJsonArray("user")
 
-                for (u in usersResponse){
+                for (u in usersResponse) {
                     val userResponse = u.asJsonObject
                     val user = User(
                         userResponse.get("Id").asInt,
@@ -133,11 +135,11 @@ class DatabaseService {
                     users.add(user)
                 }
 
-                for (u in users){
+                for (u in users) {
                     val userScopes = mutableListOf<Scope>()
-                    for (r in responsibilitiesResponse){
+                    for (r in responsibilitiesResponse) {
                         val responsibilityResponse = r.asJsonObject
-                        if (u.Id == responsibilityResponse.get("idResponsibleUser").asInt){
+                        if (u.Id == responsibilityResponse.get("idResponsibleUser").asInt) {
                             val scope = getScope(
                                 responsibilityResponse.get("idScope").asInt
                             )
@@ -148,35 +150,61 @@ class DatabaseService {
                 }
 
                 users
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 println(e.message.toString())
                 throw Exception(e.message)
             }
-        }
-        else {
+        } else {
             throw Exception("rootResponse['success'] == false")
         }
     }
-    suspend fun getScope(id: Int): Scope{
+
+    suspend fun getScopes(): MutableList<Scope> {
+        val rootResponseJson = api.getScopes()
+        return try {
+            if (rootResponseJson.get("success").asBoolean) {
+                val scopes = mutableListOf<Scope>()
+                val scopesResponse = rootResponseJson.get("data").asJsonArray
+                for (scopeElement in scopesResponse) {
+                    val scopeObject = scopeElement.asJsonObject
+                    val scope = Scope(
+                        scopeObject.get("Id").asInt,
+                        scopeObject.get("Name").asString
+                    )
+                    scopes.add(scope)
+                }
+                scopes
+            } else {
+                Log.e("DatabaseService.getScopes()", "response == false")
+                throw Exception("response == false")
+            }
+
+        } catch (e: Exception) {
+            Log.e("DatabaseService.getScopes()", e.message.toString())
+            throw e
+        }
+    }
+
+    suspend fun getScope(id: Int): Scope {
         val data = JsonObject()
         data.addProperty("id", id)
         val rootResponseJson = api.getScope(data)
         return try {
-            if (rootResponseJson.get("scope").isJsonObject){
+            if (rootResponseJson.get("scope").isJsonObject) {
                 val scopeResponse = rootResponseJson.get("scope").asJsonObject
                 Scope(
                     scopeResponse.get("id").asInt,
                     scopeResponse.get("name").asString
                 )
-            }
-            else {
+            } else {
                 throw Exception("scope == false")
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw Exception(e.message)
         }
     }
-    suspend fun sendTaskForVerify(task: Task): Boolean{
+
+    suspend fun sendTaskForVerify(task: Task): Boolean {
         val data = JsonObject()
         data.addProperty("table_name", "task")
         data.addProperty("field_name", "idStatus")
@@ -184,20 +212,20 @@ class DatabaseService {
         data.addProperty("id", task.Id)
 
         val rootResponseJson = api.sendTaskForVerify(data)
-        return try{
+        return try {
             val r = rootResponseJson.get("success").asBoolean
-            if (r){
+            if (r) {
                 r
-            }
-            else {
+            } else {
                 throw Exception("DatabaseService.sendTaskForVerify() error. r == false")
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("DatabaseService.sendTaskForVerify()", e.message.toString())
             throw e
         }
     }
-    suspend fun verifyTask(task: Task, userId: Int): Boolean{
+
+    suspend fun verifyTask(task: Task, userId: Int): Boolean {
         val data = JsonObject()
         data.addProperty("table_name", "task")
         data.addProperty("field_name", "idStatus")
@@ -205,34 +233,33 @@ class DatabaseService {
         data.addProperty("id", task.Id)
 
         val rootResponseJson = api.sendTaskForVerify(data)
-        return try{
+        return try {
             val r = rootResponseJson.get("success").asBoolean
-            if (r){
+            if (r) {
                 return putFinishedTask(task, userId)
-            }
-            else {
+            } else {
                 throw Exception("DatabaseService.verifyTask() error. r == false")
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("DatabaseService.verifyTask()", e.message.toString())
             throw e
         }
     }
-    private suspend fun putFinishedTask(task: Task, userId: Int): Boolean{
+
+    private suspend fun putFinishedTask(task: Task, userId: Int): Boolean {
         val data = JsonObject()
         data.addProperty("idTask", task.Id)
         data.addProperty("idFinishedUser", userId)
 
         val rootResponseJson = api.putFinishedTask(data)
-        return try{
+        return try {
             val r = rootResponseJson.get("success").asBoolean
-            if (r){
+            if (r) {
                 r
-            }
-            else {
+            } else {
                 throw Exception("DatabaseService.putFinishedTask() error. r == false")
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("DatabaseService.putFinishedTask()", e.message.toString())
             throw e
         }

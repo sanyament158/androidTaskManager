@@ -52,7 +52,6 @@ class TaskDetailsActivity() : AppCompatActivity() {
             throw Exception("task == null")
         }
 
-        //set task's data
         with(binding) {
             setupTaskFields()
 
@@ -60,6 +59,9 @@ class TaskDetailsActivity() : AppCompatActivity() {
             when (task.Status.Id) {
                 // if status == 'В процессе'
                 1 -> {
+                    lifecycleScope.launch {
+//                        val scopes =
+                    }
                     btAction.text = "Готово"
                     btAction.setOnClickListener {
                         AlertDialog.Builder(this@TaskDetailsActivity)

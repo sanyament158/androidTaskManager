@@ -19,6 +19,9 @@ interface ApiService {
     @GET("getTable/getUsers.php")
     suspend fun getUsers(): JsonObject
 
+    @GET("getTable/getScopes.php")
+    suspend fun getScopes(): JsonObject
+
     @POST("scope/getScopeById.php")
     suspend fun getScope(@Body data: JsonObject): JsonObject
 

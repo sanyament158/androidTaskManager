@@ -38,7 +38,8 @@ class LoginActivity : AppCompatActivity() {
                     val loginedUser = db.login(username, password)
                     if (loginedUser.Role.Id == 2){
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        MainActivity.enteredUser = loginedUser
+                        MainActivity.enteredUser = db.getUsers().first { it.Id == loginedUser.Id }
+                        Log.e("asdf", loginedUser.Scopes.count().toString())
                         startActivity(intent)
                     }
                     else {

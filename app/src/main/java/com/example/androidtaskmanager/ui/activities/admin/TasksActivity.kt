@@ -20,14 +20,15 @@ import com.example.androidtaskmanager.ui.adapters.TaskAdapter
 import kotlinx.coroutines.launch
 
 class TasksActivity : AppCompatActivity() {
-    companion object{
+    companion object {
         lateinit var enteredUser: User
     }
+
     private lateinit var binding: ActivityTasksBinding
     private val db = DatabaseService()
     private var _statusSwitcher = 0
     private var statusSwitcher = 0
-        get() = when(_statusSwitcher % 3){
+        get() = when (_statusSwitcher % 3) {
             0 -> 1
             1 -> 2
             2 -> 3
@@ -37,28 +38,32 @@ class TasksActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        Log.e("f", "$statusSwitcher")
-
         binding = ActivityTasksBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val headerTitle = HeaderFragment.newInstance("Все задачи")
         supportFragmentManager.commit {
             add(R.id.headerTitle, headerTitle)
         }
-        with(binding){
+        with(binding) {
             buttonStatusSwitcher.text = updateStatusSwitcherText()
             buttonStatusSwitcher.setOnClickListener {
                 _statusSwitcher++
                 buttonStatusSwitcher.text = updateStatusSwitcherText()
-                lifecycleScope.launch { binding.rvTasks.adapter = TaskAdapter(updateTasks(),
-                    {task ->
-                        TaskDetailsActivity.task = task
-                        TaskDetailsActivity.enteredUser = enteredUser
-                        startActivity(Intent(this@TasksActivity,
-                            TaskDetailsActivity::class.java))
-                    }
-                ) }
+                lifecycleScope.launch {
+                    binding.rvTasks.adapter = TaskAdapter(
+                        updateTasks(),
+                        { task ->
+                            TaskDetailsActivity.task = task
+                            TaskDetailsActivity.enteredUser = enteredUser
+                            startActivity(
+                                Intent(
+                                    this@TasksActivity,
+                                    TaskDetailsActivity::class.java
+                                )
+                            )
+                        }
+                    )
+                }
             }
         }
     }
@@ -68,24 +73,41 @@ class TasksActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val tasks = updateTasks()
             binding.rvTasks.layoutManager = LinearLayoutManager(this@TasksActivity)
-            binding.rvTasks.adapter = TaskAdapter(tasks,
-                {task ->
+            binding.rvTasks.adapter = TaskAdapter(
+                tasks,
+                { task ->
                     TaskDetailsActivity.task = task
                     TaskDetailsActivity.enteredUser = enteredUser
-                    startActivity(Intent(this@TasksActivity,
-                    TaskDetailsActivity::class.java))}
+                    startActivity(
+                        Intent(
+                            this@TasksActivity,
+                            TaskDetailsActivity::class.java
+                        )
+                    )
+                }
             )
         }
     }
+
     private fun updateStatusSwitcherText(): String =
-        when (statusSwitcher){
+        when (statusSwitcher) {
             1 -> "В процессе"
             2 -> "Выполнено"
             3 -> "На проверке"
             else -> "unknown"
         }
+
     private suspend fun updateTasks(): MutableList<Task> {
         val r = db.getTasks().filter { it.Status.Id == statusSwitcher }
-        return r.toMutableList()
+        val sorted = mutableListOf<Task>()
+        for (t in r) {
+            for (s in enteredUser.Scopes) {
+                if (s.Id == t.Scope.Id) {
+                    sorted.add(t)
+                }
+            }
+        }
+        Log.e("asld;fj", enteredUser.Scopes.count().toString())
+        return sorted.toMutableList()
     }
 }

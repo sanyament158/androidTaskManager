@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="12dp"
-    android:background="@color/brown"
+    android:background="@drawable/field_shape"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
     android:clickable="true"
     android:focusable="true">
 
@@ -14,14 +16,14 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#333333" />
+        android:textColor="@color/brown" />
 
     <TextView
         android:id="@+id/tvDeadline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="#666666"
+        android:textColor="@color/paleBrown"
         android:layout_marginTop="4dp" />
 
     <TextView
@@ -32,7 +34,6 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="2dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/field_shape"
-        android:textColor="#FFFFFF" />
+        android:textColor="@color/brown" />
 
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -68,8 +69,11 @@ class AddTaskActivity : AppCompatActivity() {
                 )
                 lifecycleScope.launch {
                     val r = db.putTask(task)
-                    if (r){
-                        Log.i("taskmanager info", "task (title = ${task.Title}) was added successfully")
+                    if (r) {
+                        Toast.makeText(this@AddTaskActivity, "Задача добавлена", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this@AddTaskActivity, "Ошибка при добавлении", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

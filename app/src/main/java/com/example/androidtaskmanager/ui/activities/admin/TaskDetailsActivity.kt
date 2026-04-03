@@ -47,7 +47,7 @@ class TaskDetailsActivity() : AppCompatActivity() {
 
         // init a tasks list
         lifecycleScope.launch {
-            tasks = db.getTasks()
+            tasks = db.getTasks().filter { it.Status.Id == task.Status.Id }.toMutableList()
             actualTaskIndex = tasks.indexOf(
                 tasks.find { it.Id == task.Id }
             )

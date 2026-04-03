@@ -6,15 +6,10 @@ import com.example.androidtaskmanager.models.Scope
 import com.example.androidtaskmanager.models.Status
 import com.example.androidtaskmanager.models.Task
 import com.example.androidtaskmanager.models.User
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.datetime.LocalDate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Dictionary
-import kotlin.math.log
 
 class DatabaseService {
     private val _host = "5.129.192.69"
@@ -110,6 +105,19 @@ class DatabaseService {
         } else {
             throw Exception("success == false")
         }
+    }
+
+    suspend fun putTask(task: Task): Boolean{
+        val data = JsonObject()
+        data.addProperty("idOwner", task.Owner.Id)
+        data.addProperty("idStatus", task.Status.Id)
+        data.addProperty("title", task.Title)
+        data.addProperty("idScope", task.Scope.Id)
+        data.addProperty("since", task.Since.toString())
+        data.addProperty("deadline", task.Deadline.toString())
+        val rootResponse = api.putTask(data)
+
+        return rootResponse.get("success").asBoolean
     }
 
     suspend fun getUsers(): MutableList<User> { // need add scopes (responsibilities)

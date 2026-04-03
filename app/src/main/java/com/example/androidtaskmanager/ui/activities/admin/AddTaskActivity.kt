@@ -66,14 +66,12 @@ class AddTaskActivity : AppCompatActivity() {
                     LocalDate.now().toKotlinLocalDate(),
                     kotlinx.datetime.LocalDate.parse(getSelectedDate())
                 )
-                val r = JsonObject()
-                r.addProperty("idOwner", task.Owner.Id)
-                r.addProperty("idStatus", task.Status.Id)
-                r.addProperty("title", task.Title)
-                r.addProperty("idScope", task.Scope.Id)
-                r.addProperty("since", task.Since.toString())
-                r.addProperty("deadline", task.Deadline.toString())
-                Log.e("a;sldkjf;alkdsjf", r.toString())
+                lifecycleScope.launch {
+                    val r = db.putTask(task)
+                    if (r){
+                        Log.i("taskmanager info", "task (title = ${task.Title}) was added successfully")
+                    }
+                }
             }
         }
     }
@@ -82,7 +80,7 @@ class AddTaskActivity : AppCompatActivity() {
         var day: String = binding.deadline.dayOfMonth.toString()
 
         if (binding.deadline.month < 10){
-            moth = "0${binding.deadline.month}"
+            moth = "0${binding.deadline.month.plus(1)}"
         }
         if (binding.deadline.dayOfMonth < 10){
             day = "0${binding.deadline.dayOfMonth}"

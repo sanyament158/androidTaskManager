@@ -34,4 +34,7 @@ interface ApiService {
     @POST("task/putFinishedTask.php")
     suspend fun putFinishedTask(@Body data: JsonObject): JsonObject
 
+    @POST("task/putTask.php")
+    suspend fun putTask(@Body data: JsonObject): JsonObject
+
 }

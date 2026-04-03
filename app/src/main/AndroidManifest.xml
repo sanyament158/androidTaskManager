@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidTaskManager">
         <activity
+            android:name=".ui.activities.admin.AddTaskActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.admin.TaskDetailsActivity"
             android:exported="false" />
         <activity

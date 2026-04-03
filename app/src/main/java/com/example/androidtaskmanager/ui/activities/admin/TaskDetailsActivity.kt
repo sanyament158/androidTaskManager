@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColor
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.data.DatabaseService
@@ -139,7 +140,7 @@ class TaskDetailsActivity() : AppCompatActivity() {
                 2 -> {
                     btAction.text = "Задача уже выполнена"
                     btAction.isEnabled = false
-                    btAction.background = R.color.grey.toDrawable()
+                    btAction.isVisible = false
                 }
                 // if status == 'На проверке'
                 3 -> {

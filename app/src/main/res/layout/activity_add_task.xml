@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        tools:context=".ui.activities.admin.AddTaskActivity">
+
+        <LinearLayout
+            android:id="@+id/headerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btBack"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/arrow_left"
+            android:background="@color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/titleTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="Название задачи"
+            style="@style/BaseText.fieldTitle"
+            app:layout_constraintTop_toBottomOf="@+id/headerTitle" />
+
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            style="@style/BaseText.inputField"
+            app:layout_constraintTop_toBottomOf="@+id/titleTitle" />
+
+        <TextView
+            android:id="@+id/scopeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Зона ответственности"
+            style="@style/BaseText.fieldTitle"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <Spinner
+            android:id="@+id/scope"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            style="@style/BaseText.inputField"
+            app:layout_constraintTop_toBottomOf="@+id/scopeTitle" />
+
+        <TextView
+            android:id="@+id/deadlineTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Срок сдачи"
+            style="@style/BaseText.fieldTitle"
+            app:layout_constraintTop_toBottomOf="@+id/scope" />
+
+        <DatePicker
+            android:id="@+id/deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/grey"
+            android:calendarTextColor="@color/brown"
+            android:headerBackground="@color/paleBrown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deadlineTitle" />
+
+        <Button
+            android:id="@+id/btAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="90dp"
+            android:layout_marginTop="24dp"
+            android:text="Подтвердить"
+            style="@style/BaseText.BaseButton"
+            app:layout_constraintTop_toBottomOf="@+id/deadline" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.material:material:1.13.0")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
     implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")

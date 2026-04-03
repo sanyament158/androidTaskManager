@@ -31,12 +31,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-
         with (binding){
             buttonTasks.setOnClickListener {
                 val intent = Intent(this@MainActivity, TasksActivity::class.java)
                 TasksActivity.enteredUser = enteredUser
+                startActivity(intent)
+            }
+            buttonAddTask.setOnClickListener {
+                val intent = Intent(this@MainActivity, AddTaskActivity::class.java)
+                AddTaskActivity.enteredUser = enteredUser
                 startActivity(intent)
             }
         }

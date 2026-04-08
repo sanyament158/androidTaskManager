@@ -1,5 +1,6 @@
 package com.example.androidtaskmanager.ui.activities.admin
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -79,6 +80,9 @@ class TaskDetailsActivity() : AppCompatActivity() {
 
                 task = tasks[actualTaskIndex]
                 onSwitchTask()
+            }
+            btBack.setOnClickListener {
+                finish()
             }
         }
     }

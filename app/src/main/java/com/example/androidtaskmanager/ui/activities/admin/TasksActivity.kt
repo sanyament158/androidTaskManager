@@ -65,6 +65,14 @@ class TasksActivity : AppCompatActivity() {
                     )
                 }
             }
+            buttonAddTask.setOnClickListener {
+                val intent = Intent(this@TasksActivity, AddTaskActivity::class.java)
+                AddTaskActivity.enteredUser = enteredUser
+                startActivity(intent)
+            }
+            buttonExit.setOnClickListener {
+                finish()
+            }
         }
     }
 

@@ -42,24 +42,6 @@
             android:text="Все задачи"
             />
         <Button
-            android:id="@+id/buttonScopes"
-            style="@style/BaseText.BaseButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="7dp"
-            android:text="Зоны ответственности"
-            />
-        <Button
-            android:id="@+id/buttonEmployees"
-            style="@style/BaseText.BaseButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="7dp"
-            android:text="Сотрудники"
-            />
-        <Button
             android:id="@+id/buttonAddTask"
             style="@style/BaseText.BaseButton"
             android:layout_width="match_parent"

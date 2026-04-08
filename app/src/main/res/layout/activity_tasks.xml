@@ -29,6 +29,7 @@
         android:layout_marginVertical="10dp"
         android:textSize="16dp"
         android:padding="0dp"
+        tools:text="status switcher"
         android:text="unknown"
         style="@style/BaseText.BaseButton"
 
@@ -42,19 +43,29 @@
         android:layout_height="0dp"
         android:layout_marginVertical="5dp"
 
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/buttonExit"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonStatusSwitcher" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonAddTask"
+        style="@style/BaseText.BaseButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginVertical="7dp"
+        android:text="@string/createTask"
+        app:layout_constraintBottom_toBottomOf="@+id/rvTasks"
+        tools:layout_editor_absoluteX="30dp" />
+    <Button
+        android:id="@+id/buttonExit"
         style="@style/BaseText.BaseButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="80dp"
         android:layout_marginVertical="20dp"
 
-        android:text="@string/back"
+        android:text="@string/exit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -27,28 +27,28 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        with(binding){
+        
+        with(binding) {
             binding.buttonSignIn.setOnClickListener {
                 val username = loginField.text.toString()
                 val password = passwordField.text.toString()
 
                 lifecycleScope.launch {
                     val loginedUser = db.login(username, password)
-                    if (loginedUser.Role.Id == 2){
+                    if (loginedUser.Role.Id == 2) {
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         MainActivity.enteredUser = db.getUsers().first { it.Id == loginedUser.Id }
                         Log.e("asdf", loginedUser.Scopes.count().toString())
                         startActivity(intent)
-                    }
-                    else {
-                        Toast.makeText(this@LoginActivity, "Вход только для сотрудников", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Вход только для сотрудников",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-
             }
         }
     }
-
 }

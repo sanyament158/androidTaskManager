@@ -1,5 +1,6 @@
 package com.example.androidtaskmanager.ui.activities.admin
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -76,6 +77,9 @@ class AddTaskActivity : AppCompatActivity() {
                         Toast.makeText(this@AddTaskActivity, "Ошибка при добавлении", Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+            btBack.setOnClickListener {
+                finish()
             }
         }
     }

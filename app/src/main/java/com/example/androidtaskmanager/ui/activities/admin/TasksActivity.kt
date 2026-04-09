@@ -2,9 +2,6 @@ package com.example.androidtaskmanager.ui.activities.admin
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
@@ -106,16 +103,15 @@ class TasksActivity : AppCompatActivity() {
         }
 
     private suspend fun updateTasks(): MutableList<Task> {
-        val r = db.getTasks().filter { it.Status.Id == statusSwitcher }
+        val tasks = db.getTasks().filter { it.Status.Id == statusSwitcher }
         val sorted = mutableListOf<Task>()
-        for (t in r) {
+        for (t in tasks) {
             for (s in enteredUser.Scopes) {
                 if (s.Id == t.Scope.Id) {
                     sorted.add(t)
                 }
             }
         }
-        Log.e("asld;fj", enteredUser.Scopes.count().toString())
         return sorted.toMutableList()
     }
 }

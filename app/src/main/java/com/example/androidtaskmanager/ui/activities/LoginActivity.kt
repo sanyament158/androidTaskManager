@@ -13,8 +13,8 @@ import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityLoginBinding
 import com.example.androidtaskmanager.models.User
-import com.example.androidtaskmanager.ui.activities.admin.MainActivity
 import com.example.androidtaskmanager.ui.activities.admin.TaskDetailsActivity
+import com.example.androidtaskmanager.ui.activities.admin.TasksActivity
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
@@ -36,8 +36,8 @@ class LoginActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     val loginedUser = db.login(username, password)
                     if (loginedUser.Role.Id == 2) {
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        MainActivity.enteredUser = db.getUsers().first { it.Id == loginedUser.Id }
+                        val intent = Intent(this@LoginActivity, TasksActivity::class.java)
+                        TasksActivity.enteredUser = db.getUsers().first { it.Id == loginedUser.Id }
                         Log.e("asdf", loginedUser.Scopes.count().toString())
                         startActivity(intent)
                     } else {

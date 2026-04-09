@@ -109,7 +109,6 @@ class AddTaskActivity : AppCompatActivity() {
         binding.scope.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedScopeId = scopesList[position].Id
-                Log.e("asl;dlkfa;lsdkjf", selectedScopeId.toString())
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }

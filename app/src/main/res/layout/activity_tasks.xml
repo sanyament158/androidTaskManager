@@ -9,65 +9,59 @@
 
     <LinearLayout
         android:id="@+id/headerTitle"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-
-        app:layout_constraintHeight="1"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        >
-
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/buttonStatusSwitcher"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginHorizontal="80dp"
-        android:layout_marginVertical="10dp"
-        android:textSize="16dp"
-        android:padding="0dp"
-        tools:text="status switcher"
+        android:layout_marginTop="10dp"
         android:text="unknown"
+        android:textSize="16sp"
         style="@style/BaseText.BaseButton"
-
         app:layout_constraintTop_toBottomOf="@+id/headerTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTasks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="5dp"
-
-        app:layout_constraintBottom_toTopOf="@+id/buttonExit"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonStatusSwitcher" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStatusSwitcher"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAddTask"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/buttonAddTask"
         style="@style/BaseText.BaseButton"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginVertical="7dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/createTask"
-        app:layout_constraintBottom_toBottomOf="@+id/rvTasks"
-        tools:layout_editor_absoluteX="30dp" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonExit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <Button
         android:id="@+id/buttonExit"
         style="@style/BaseText.BaseButton"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="80dp"
-        android:layout_marginVertical="20dp"
-
+        android:layout_marginBottom="20dp"
         android:text="@string/exit"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

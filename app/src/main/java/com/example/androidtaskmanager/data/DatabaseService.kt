@@ -91,7 +91,8 @@ class DatabaseService {
                                 taskResponse.get("ScopeName").asString
                             ),
                             LocalDate.parse(taskResponse.get("Since").asString),
-                            LocalDate.parse(taskResponse.get("Deadline").asString)
+                            LocalDate.parse(taskResponse.get("Deadline").asString),
+                            taskResponse.get("idUserTaked").takeIf { !it.isJsonNull }?.asInt
                         )
                         tasks.add(task)
                     }
@@ -229,6 +230,68 @@ class DatabaseService {
             }
         } catch (e: Exception) {
             Log.e("DatabaseService.sendTaskForVerify()", e.message.toString())
+            throw e
+        }
+    }
+    suspend fun sendForFinishedWithoutUserTaked(task: Task, userId: Int){
+        takeTask(task, userId)
+        putFinishedTask(task, userId)
+        verifyTask(task, userId)
+    }
+    suspend fun takeTask(task: Task, userId: Int): Boolean {
+        val r1: Boolean
+        val r2: Boolean
+        val data = JsonObject()
+        data.addProperty("table_name", "task")
+        data.addProperty("field_name", "idStatus")
+        data.addProperty("field_new_value", "1")
+        data.addProperty("id", task.Id)
+
+        var rootResponseJson = api.takeTask(data)
+        try {
+            r1 = rootResponseJson.get("success").asBoolean
+            if (!r1) {
+                throw Exception("DatabaseService.takeTask() error. r1 == false")
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseService.takeTask()", e.message.toString())
+            throw e
+        }
+
+        val data2 = JsonObject()
+        data2.addProperty("table_name", "task")
+        data2.addProperty("field_name", "idUserTaked")
+        data2.addProperty("field_new_value", userId)
+        data2.addProperty("id", task.Id)
+        rootResponseJson = api.setUserTaked(data2)
+        try {
+            r2 = rootResponseJson.get("success").asBoolean
+            if (!r2) {
+                throw Exception("DatabaseService.takeTask() error. r2 == false")
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseService.takeTask()", e.message.toString())
+            throw e
+        }
+        return (r1 && r2)
+    }
+    suspend fun sendTaskForWaiting(task: Task): Boolean {
+        val data = JsonObject()
+        data.addProperty("table_name", "task")
+        data.addProperty("field_name", "idStatus")
+        data.addProperty("field_new_value", "4")
+        data.addProperty("id", task.Id)
+
+        val rootResponseJson = api.sendForWaiting(data)
+        return try {
+            val r = rootResponseJson.get("success").asBoolean
+            if (r) {
+                r
+            } else {
+                throw Exception("DatabaseService.sendTaskForWaiting() error. r == false")
+            }
+        } catch (e: Exception) {
+            Log.e("DatabaseService.sendTaskForWaiting()", e.message.toString())
             throw e
         }
     }

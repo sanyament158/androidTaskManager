@@ -9,7 +9,8 @@ class Task(
     val Description: String = "Без описания",
     val Scope: Scope = Scope(),
     val Since: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-    val Deadline: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.plus(1, DateTimeUnit.DAY)
+    val Deadline: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.plus(1, DateTimeUnit.DAY),
+    val IdUserTaked: Int?
 )
 
 class Scope(

@@ -11,6 +11,7 @@ import com.example.androidtaskmanager.R
 import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityTasksBinding
 import com.example.androidtaskmanager.fragments.HeaderFragment
+import com.example.androidtaskmanager.models.Status
 import com.example.androidtaskmanager.models.Task
 import com.example.androidtaskmanager.models.User
 import com.example.androidtaskmanager.ui.adapters.TaskAdapter
@@ -21,16 +22,9 @@ class TasksActivity : AppCompatActivity() {
         lateinit var enteredUser: User
     }
 
+    private val statusSwitcher = StatusSwitcher()
     private lateinit var binding: ActivityTasksBinding
     private val db = DatabaseService()
-    private var _statusSwitcher = 0
-    private var statusSwitcher = 0
-        get() = when (_statusSwitcher % 3) {
-            0 -> 1
-            1 -> 2
-            2 -> 3
-            else -> 4
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +36,12 @@ class TasksActivity : AppCompatActivity() {
             add(R.id.headerTitle, headerTitle)
         }
         with(binding) {
-            buttonStatusSwitcher.text = updateStatusSwitcherText()
+
+            buttonStatusSwitcher.text = statusSwitcher.getStatusName()
             buttonStatusSwitcher.setOnClickListener {
-                _statusSwitcher++
-                buttonStatusSwitcher.text = updateStatusSwitcherText()
                 lifecycleScope.launch {
+                    statusSwitcher.switchStatus()
+                    buttonStatusSwitcher.text = statusSwitcher.getStatusName()
                     binding.rvTasks.adapter = TaskAdapter(
                         updateTasks(),
                         { task ->
@@ -94,16 +89,8 @@ class TasksActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateStatusSwitcherText(): String =
-        when (statusSwitcher) {
-            1 -> "В процессе"
-            2 -> "Выполнено"
-            3 -> "На проверке"
-            else -> "unknown"
-        }
-
     private suspend fun updateTasks(): MutableList<Task> {
-        val tasks = db.getTasks().filter { it.Status.Id == statusSwitcher }
+        val tasks = db.getTasks().filter { it.Status.Id == statusSwitcher.getStatusId() }
         val sorted = mutableListOf<Task>()
         for (t in tasks) {
             for (s in enteredUser.Scopes) {
@@ -115,3 +102,27 @@ class TasksActivity : AppCompatActivity() {
         return sorted.toMutableList()
     }
 }
+
+
+class StatusSwitcher(){
+    private var _statusId = 1
+    private var _statusName = "В процессе"
+    fun switchStatus(){
+        if (_statusId == 4){
+            _statusId = 1
+            return
+        }
+        _statusId++
+    }
+    fun getStatusName(): String {
+        return when (_statusId) {
+            1 -> "В процессе"
+            2 -> "Готово"
+            3 -> "На проверке"
+            4 -> "Ожидает"
+            else -> "Неизвестно"
+        }
+    }
+    fun getStatusId(): Int = _statusId
+
+    }

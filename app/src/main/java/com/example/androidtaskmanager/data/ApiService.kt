@@ -31,6 +31,14 @@ interface ApiService {
     @POST("generics/updateFieldFromTableById.php")
     suspend fun verifyTask(@Body data: JsonObject): JsonObject
 
+    @POST("generics/updateFieldFromTableById.php")
+    suspend fun sendForWaiting(@Body data: JsonObject): JsonObject
+
+    @POST("generics/updateFieldFromTableById.php")
+    suspend fun takeTask(@Body data: JsonObject): JsonObject
+
+    @POST("generics/updateFieldFromTableById.php")
+    suspend fun setUserTaked(@Body data: JsonObject): JsonObject
     @POST("task/putFinishedTask.php")
     suspend fun putFinishedTask(@Body data: JsonObject): JsonObject
 

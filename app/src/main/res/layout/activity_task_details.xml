@@ -171,6 +171,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDeadlineTitle"
             tools:text="VCHERA YOPTA))" />
+        <TextView
+            android:id="@+id/tvUserTakedTitle"
+            style="@style/BaseText.fieldTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Задачу взял:"
+            android:textAlignment="center"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDeadline" />
+
+        <TextView
+            android:id="@+id/tvUserTaked"
+            style="@style/BaseText.fieldTitle.fieldValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/field_shape"
+            android:padding="8dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvUserTakedTitle"
+            tools:text="vasya))" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

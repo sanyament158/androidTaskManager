@@ -61,12 +61,13 @@ class AddTaskActivity : AppCompatActivity() {
                 val task = Task(
                     0,
                     User(enteredUser.Id),
-                    Status(1),
+                    Status(4),
                     title.text.toString(),
                     "without description",
                     Scope(selectedScopeId),
                     LocalDate.now().toKotlinLocalDate(),
-                    kotlinx.datetime.LocalDate.parse(getSelectedDate())
+                    kotlinx.datetime.LocalDate.parse(getSelectedDate()),
+                    enteredUser.Id
                 )
                 lifecycleScope.launch {
                     val r = db.putTask(task)

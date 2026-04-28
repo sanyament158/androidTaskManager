@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +21,7 @@ import com.example.androidtaskmanager.data.DatabaseService
 import com.example.androidtaskmanager.databinding.ActivityTaskDetailsBinding
 import com.example.androidtaskmanager.models.Task
 import com.example.androidtaskmanager.models.User
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
@@ -60,7 +62,7 @@ class TaskDetailsActivity() : AppCompatActivity() {
 
         with(binding) {
             onSwitchTask()
-
+            Log.i("taskinfo", task.IdUserTaked.toString())
             btNext.setOnClickListener {
                 if (actualTaskIndex == tasks.count() - 1) {
                     actualTaskIndex = 0
@@ -90,12 +92,32 @@ class TaskDetailsActivity() : AppCompatActivity() {
     private fun sendForVerify() {
         lifecycleScope.launch {
             db.sendTaskForVerify(task)
+            finish()
         }
     }
 
     private fun sendForFinished() {
         lifecycleScope.launch {
             db.verifyTask(task, enteredUser.Id)
+            finish()
+        }
+    }
+    private fun sendForWaiting(){
+        lifecycleScope.launch {
+            db.sendTaskForWaiting(task)
+            finish()
+        }
+    }
+    private fun takeTask(){
+        lifecycleScope.launch{
+            db.takeTask(task, enteredUser.Id)
+            finish()
+        }
+    }
+    private fun sendForFinishedWithoutUserTaked(){
+        lifecycleScope.launch{
+            db.takeTask(task, enteredUser.Id)
+            finish()
         }
     }
 
@@ -105,6 +127,16 @@ class TaskDetailsActivity() : AppCompatActivity() {
             tvOwner.text = task.Owner.Lname
             tvStatus.text = task.Status.Name
             tvScope.text = task.Scope.Name
+            lifecycleScope.launch {
+                if (task.IdUserTaked != null){
+                    val userTakedName =
+                        db.getUsers().filter { it.Id == task.IdUserTaked }.first().Lname
+                    tvUserTaked.text = userTakedName
+                } else {
+                    tvUserTaked.text = "Задачу никто не взял"
+                }
+            }
+
             tvDeadline.text =
                 java.time.LocalDate.now().toKotlinLocalDate().daysUntil(task.Deadline).toString()
             if (java.time.LocalDate.now().toKotlinLocalDate().daysUntil(task.Deadline) < 0) {
@@ -118,26 +150,19 @@ class TaskDetailsActivity() : AppCompatActivity() {
             when (task.Status.Id) {
                 // if status == 'В процессе'
                 1 -> {
-                    btAction.text = "Готово"
-                    var isResponsible = false
-                    for (s in enteredUser.Scopes){
-                        Log.e("VIP", s.Name)
-                    }
-                    for (s in enteredUser.Scopes){
-                        if (s.Id == task.Scope.Id){
-                            isResponsible = true
-                            btAction.setOnClickListener {
-                                AlertDialog.Builder(this@TaskDetailsActivity)
-                                    .setTitle("Подтверждение")
-                                    .setMessage("Задача выполнена вами?")
-                                    .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                                    .setPositiveButton("Да") { _, _ -> sendForVerify() }
-                                    .show()
-                            }
+                    if (enteredUser.Id == task.IdUserTaked){
+                        btAction.text = "Готово"
+                        btAction.setOnClickListener {
+                            AlertDialog.Builder(this@TaskDetailsActivity)
+                                .setTitle("Подтверждение")
+                                .setMessage("Задача выполнена вами?")
+                                .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                .setPositiveButton("Да") { _, _ -> sendForVerify() }
+                                .show()
                         }
                     }
-                    if (!isResponsible){
-                        btAction.background = R.drawable.field_shape.toDrawable()
+                    else {
+                        btAction.isVisible = false
                     }
                 }
                 // if status == 'Готово'
@@ -148,15 +173,52 @@ class TaskDetailsActivity() : AppCompatActivity() {
                 }
                 // if status == 'На проверке'
                 3 -> {
-                    btAction.text = "Проверить"
-                    btAction.setOnClickListener {
-                        AlertDialog.Builder(this@TaskDetailsActivity)
-                            .setTitle("Подтверждение")
-                            .setMessage("Вы проверили результат?")
-                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
-                            .setPositiveButton("Да") { _, _ -> sendForFinished() }
-                            .show()
+                    if (task.Owner.Id == enteredUser.Id){
+                        btAction.text = "Проверить"
+                        btAction.setOnClickListener {
+                            AlertDialog.Builder(this@TaskDetailsActivity)
+                                .setTitle("Подтверждение")
+                                .setMessage("Результат удовлетворительный?")
+                                .setNegativeButton("Нет") { dialog, _ -> sendForWaiting() }
+                                .setPositiveButton("Да") { _, _ -> sendForFinished() }
+                                .show()
+                        }
+                    } else {
+                        btAction.isVisible = false
                     }
+                }
+                // if status == 'В ожидании'
+                4 -> {
+                    if (task.Owner.Id == enteredUser.Id){
+                        btAction.text = "Проверить"
+                        btAction.setOnClickListener {
+                            AlertDialog.Builder(this@TaskDetailsActivity)
+                                .setTitle("Подтверждение")
+                                .setMessage("Результат удовлетворительный?")
+                                .setNegativeButton("Нет") { dialog, _ -> sendForWaiting() }
+                                .setPositiveButton("Да") { _, _ -> sendForFinishedWithoutUserTaked() }
+                                .show()
+                        }
+                    } else {
+                            btAction.text = "Взять задачу"
+                            var isResponsible = false
+                            for (s in enteredUser.Scopes) {
+                                if (s.Id == task.Scope.Id) {
+                                    isResponsible = true
+                                    btAction.setOnClickListener {
+                                        AlertDialog.Builder(this@TaskDetailsActivity)
+                                            .setTitle("Подтверждение")
+                                            .setMessage("Вы хотите взять задачу?")
+                                            .setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
+                                            .setPositiveButton("Да") { _, _ -> takeTask() }
+                                            .show()
+                                    }
+                                }
+                            }
+                            if (!isResponsible) {
+                                btAction.background = R.drawable.field_shape.toDrawable()
+                            }
+                        }
                 }
             }
         }
